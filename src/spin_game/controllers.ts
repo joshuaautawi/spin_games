@@ -1,40 +1,34 @@
-import { Get, Route } from "tsoa";
 import { SpinGames } from "./entity";
-import { PingResponse } from "./response";
 import { CreateRequest, UpdateRequest } from "./request";
 import { Prizes } from "../prize/entity";
 import { v4 as uuid } from "uuid";
 import { SpinHistory } from "../spin_history/entity";
 
-@Route("ping")
 export default class SpinGamesController {
-  @Get("/")
-  public async getMessage(): Promise<PingResponse> {
-    return {
-      message: "pingpong",
-    };
-  }
-
   public async getAll() {
     const spinGames = await SpinGames.findAll();
     return spinGames;
   }
   public async getOne(id: string) {
-    const spinGame = await SpinGames.findOne({ where: { id } });
-    return spinGame;
+    try {
+      const spinGame = await SpinGames.findOne({ where: { id } });
+      return spinGame;
+    } catch (error) {
+      return null;
+    }
   }
 
   public async delete(id: string) {
-    const spinGame = await SpinGames.findOne({ where: { id } });
-    await Prizes.destroy({ where: { spin_games_id: id } });
+    const spinGame = await this.getOne(id);
     if (!spinGame) {
       return null;
     }
+    await Prizes.destroy({ where: { spin_game_id: id } });
     await SpinGames.destroy({ where: { id } });
     return spinGame;
   }
   public async update(id: string, body: UpdateRequest) {
-    const spinGame = await SpinGames.findOne({ where: { id } });
+    const spinGame = await this.getOne(id);
     if (!spinGame) {
       return null;
     }
@@ -60,7 +54,7 @@ export default class SpinGamesController {
   }
 
   public async spin(id: string) {
-    const spinGame = await SpinGames.findOne({ where: { id } });
+    const spinGame = await this.getOne(id);
     if (!spinGame) {
       return null;
     }
@@ -68,7 +62,6 @@ export default class SpinGamesController {
       where: { spin_game_id: id },
       order: [["probability", "ASC"]],
     });
-    console.log(prizes);
     const random = Math.random();
     let choosenPrize;
     for (let i = 0; i < prizes.length; i++) {
@@ -80,11 +73,18 @@ export default class SpinGamesController {
     if (!choosenPrize) {
       choosenPrize = prizes[prizes.length - 1];
     }
-
-    await SpinHistory.create({
+    return await SpinHistory.create({
       spin_game_id: spinGame.id,
       prize_id: choosenPrize?.id,
     });
-    return choosenPrize;
+  }
+
+  public async history(id: string) {
+    try {
+      const history = await SpinHistory.findOne({ where: { id } });
+      return history;
+    } catch (error) {
+      return null;
+    }
   }
 }

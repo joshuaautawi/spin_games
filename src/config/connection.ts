@@ -10,6 +10,7 @@ const connection = new Sequelize({
   password: "postgres",
   database: "starcade",
   logging: false,
+
   models: [SpinGames, Prizes, SpinHistory],
 });
 
