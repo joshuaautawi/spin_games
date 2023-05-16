@@ -107,6 +107,22 @@ describe("spin game API", () => {
       });
   });
 
+  it("verify that the name is not changed", () => {
+    return chai
+      .request(app)
+      .get(`/spin-games/${id}`)
+      .then((res) => {
+        chai.expect(res.status).to.eql(200);
+        chai.expect(res.body).to.have.an("object");
+        chai.expect(res.body).to.have.property("data");
+        chai
+          .expect(res.body)
+          .to.have.property("data")
+          .to.have.property("name")
+          .equal("changeName");
+      });
+  });
+
   it("should return forbidden, length < 5", () => {
     return chai
       .request(app)
@@ -115,6 +131,22 @@ describe("spin game API", () => {
       .then((res) => {
         chai.expect(res.status).to.eql(403);
         chai.expect(res.body).to.have.an("object");
+      });
+  });
+
+  it("verify that the name is not changed", () => {
+    return chai
+      .request(app)
+      .get(`/spin-games/${id}`)
+      .then((res) => {
+        chai.expect(res.status).to.eql(200);
+        chai.expect(res.body).to.have.an("object");
+        chai.expect(res.body).to.have.property("data");
+        chai
+          .expect(res.body)
+          .to.have.property("data")
+          .to.have.property("name")
+          .equal("changeName");
       });
   });
 
@@ -130,6 +162,22 @@ describe("spin game API", () => {
       });
   });
 
+  it("verify that the name is not changed", () => {
+    return chai
+      .request(app)
+      .get(`/spin-games/${id}`)
+      .then((res) => {
+        chai.expect(res.status).to.eql(200);
+        chai.expect(res.body).to.have.an("object");
+        chai.expect(res.body).to.have.property("data");
+        chai
+          .expect(res.body)
+          .to.have.property("data")
+          .to.have.property("name")
+          .equal("changeName");
+      });
+  });
+
   it("should return not found because the id is wrong", () => {
     return chai
       .request(app)
@@ -138,6 +186,17 @@ describe("spin game API", () => {
         chai.expect(res.status).to.eql(404);
         chai.expect(res.body).to.have.an("object");
         chai.expect(res.body).to.have.property("status").equal("NOT_FOUND");
+      });
+  });
+
+  it("verify that spin games is not deleted !", () => {
+    return chai
+      .request(app)
+      .get(`/spin-games/${id}`)
+      .then((res) => {
+        chai.expect(res.status).to.eql(200);
+        chai.expect(res.body).to.have.an("object");
+        chai.expect(res.body).to.have.property("data");
       });
   });
 
@@ -151,6 +210,15 @@ describe("spin game API", () => {
         chai.expect(res.body).to.have.property("data").to.have.property("id");
         historyId = res.body.data.id;
         prizeId = res.body.data.prize_id;
+      });
+  });
+  it("should return not found ", () => {
+    return chai
+      .request(app)
+      .get(`/spin-history/${historyId}2`)
+      .then((res) => {
+        chai.expect(res.status).to.eql(404);
+        chai.expect(res.body).to.have.an("object");
       });
   });
 
