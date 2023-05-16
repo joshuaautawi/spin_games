@@ -2,7 +2,7 @@ import express from "express";
 import SpinGamesController from "./controllers";
 import { CreateRequest, UpdateRequest } from "./request";
 import { v4 as uuid } from "uuid";
-import { type } from "os";
+
 const router = express.Router();
 const controller = new SpinGamesController();
 

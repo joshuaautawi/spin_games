@@ -184,6 +184,16 @@ describe("spin game API", () => {
       });
   });
 
+  it("should return not found, id is wrong", () => {
+    return chai
+      .request(app)
+      .delete(`/spin-games/${id}a`)
+      .then((res) => {
+        chai.expect(res.status).to.eql(404);
+        chai.expect(res.body).to.have.an("object");
+      });
+  });
+
   it("should return not found ,deleted! ", () => {
     return chai
       .request(app)

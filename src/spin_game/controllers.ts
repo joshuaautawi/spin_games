@@ -19,13 +19,17 @@ export default class SpinGamesController {
   }
 
   public async delete(id: string) {
-    const spinGame = await this.getOne(id);
-    if (!spinGame) {
+    try {
+      const spinGame = await this.getOne(id);
+      if (!spinGame) {
+        return null;
+      }
+      await Prizes.destroy({ where: { spin_game_id: id } });
+      await SpinGames.destroy({ where: { id } });
+      return spinGame;
+    } catch (error) {
       return null;
     }
-    await Prizes.destroy({ where: { spin_game_id: id } });
-    await SpinGames.destroy({ where: { id } });
-    return spinGame;
   }
   public async update(id: string, body: UpdateRequest) {
     const spinGame = await this.getOne(id);
