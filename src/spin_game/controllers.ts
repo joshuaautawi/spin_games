@@ -44,7 +44,7 @@ export default class SpinGamesController {
 
     let arr = [0.1, 0.2, 0.3, 0.7];
     await Promise.all(
-      arr.map(async (e, i) => {
+        arr.map(async (e, i) => {
         await Prizes.create({
           id: uuid(),
           name: "prize " + i,
